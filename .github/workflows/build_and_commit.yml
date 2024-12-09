@@ -1,0 +1,50 @@
+name: "Clone, Build, Execute, Commit"
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the code of the current repository
+    - name: Checkout current repository
+      uses: actions/checkout@v3
+
+    # Clone the secondary repository into a subfolder
+    - name: Clone secondary repository
+      run: |
+        git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/kingofthegrid/king-of-the-grid kotg-engine
+        cd kotg-engine
+        git submodule update --init --recursive
+        make kotg
+        cd ../
+
+    # Execute the binary against files in the cloned repo
+    - name: Execute binary against files
+      run: cd bots && ../kotg-engine/bin/kotg && cd ../
+
+    # Configure Git for committing to the third repository
+    - name: Configure Git
+      run: |
+        git config --global user.name "ci"
+        git config --global user.email "ci@kingofthegrid.com"
+        git config --global diff.renames false
+        git config --unset-all http.https://github.com/.extraheader
+
+    # Clone the third repository
+    - name: Clone Results
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAGES_REPO }}
+      run: |
+        git clone https://user:$GITHUB_TOKEN@github.com/kingofthegrid/kingofthegrid.github.io www
+        cd www
+        rm -rf results/*
+        cp ../bots/recording-* results/
+        python3 ../kotg-engine/tools/outcomes2html.py ../bots/outcome.json index.html "results/"
+        git add .
+        git commit -m "Update Leaderboard"
+        git push

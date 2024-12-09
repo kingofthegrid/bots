@@ -12,6 +12,6 @@ To see what King Of The Grid is, see the [link](https://github.com/kingofthegrid
 
 # Before you submit
 
-Test your bot against others using either [kingofthegrid.com/run.html](https://kingofthegrid.com/run.html) to see how it performs in your browser. You can so this by uploading your bot on one side and select existing bot in another side.
+Test your bot against others using either [kingofthegrid.com/run.html](https://kingofthegrid.com/run.html) to see how it performs in your browser. You can do this by uploading your bot on one side and select existing bot in another side.
 
-See [examples](https://github.com/kingofthegrid/king-of-the-grid/examples) to see how to write your bot. 
+See [examples](https://github.com/kingofthegrid/king-of-the-grid/tree/master/examples) to see how to write your bot. 
